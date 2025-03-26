@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { Icon } from '@iconify/react';
 import { Link } from 'react-router-dom';
+import Income from './income';
+// import { useNavigate } from 'react-router-dom';
 
 const Dashboard = () => {
   const [isSidebarOpen, setSidebarOpen] = useState(true);
@@ -15,6 +17,7 @@ const Dashboard = () => {
   const menuItems = [
     { label: 'Dashboard', icon: 'ph:grid-four', path: '/dashboard' },
     { label: 'Transactions', icon: 'ph:money', path: '/transactions' },
+    { label: 'Income', icon: 'ph:money', path: '/income' },
     { label: 'Budget', icon: 'ph:chart-pie', path: '/budget' },
     { label: 'Goals', icon: 'ph:target', path: '/goals' },
     { label: 'Reports', icon: 'ph:chart-line', path: '/reports' },
