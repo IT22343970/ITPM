@@ -1,32 +1,82 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const Insertincome = () => {
   const navigate = useNavigate();
+  const [formData, setFormData] = useState({
+    userId: "",
+    source: "",
+    category: "Salary",
+    amount: "",
+    note: "",
+    date: ""
+  });
+  const [errors, setErrors] = useState({});
+
+  const validate = () => {
+    let newErrors = {};
+
+    if (!/^[1-9]\d{0,9}$/.test(formData.userId)) {
+      newErrors.userId = "User ID must be a positive integer not exceeding 10 characters";
+    }
+
+    if (!/^[A-Za-z]+$/.test(formData.source)) {
+      newErrors.source = "Source must contain only letters";
+    }
+
+    if (!formData.amount || parseFloat(formData.amount) <= 0) {
+      newErrors.amount = "Amount must be a positive number";
+    }
+
+    if (formData.note.length > 30 || /\d/.test(formData.note)) {
+      newErrors.note = "Note must be no longer than 30 characters and cannot contain numbers";
+    }
+
+    const selectedDate = new Date(formData.date);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    selectedDate.setHours(0, 0, 0, 0);
+    if (!formData.date || selectedDate > today) {
+      newErrors.date = "Date must be today or a past date";
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.id]: e.target.value });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (validate()) {
+      console.log("Form submitted successfully", formData);
+      // Proceed with form submission
+    }
+  };
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-100 p-4">
       <div className="flex justify-center items-center w-full max-w-4xl bg-white p-6 border rounded-lg shadow-lg">
-        {/* Form */}
-        <form className="space-y-4 w-full max-w-md">
+        <form className="space-y-4 w-full max-w-md" onSubmit={handleSubmit}>
           <h2 className="text-xl font-semibold text-center text-gray-800">Insert Income</h2>
 
-          {/* User ID Input */}
           <div className="flex flex-col gap-1">
             <label htmlFor="userId" className="font-medium text-gray-700">User ID</label>
-            <input type="text" id="userId" className="border p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Enter user ID" />
+            <input type="text" id="userId" className="border p-2 rounded-md" onChange={handleChange} value={formData.userId} />
+            {errors.userId && <span className="text-red-500 text-sm">{errors.userId}</span>}
           </div>
 
-          {/* Source Input */}
           <div className="flex flex-col gap-1">
             <label htmlFor="source" className="font-medium text-gray-700">Source</label>
-            <input type="text" id="source" className="border p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Enter source of income" />
+            <input type="text" id="source" className="border p-2 rounded-md" onChange={handleChange} value={formData.source} />
+            {errors.source && <span className="text-red-500 text-sm">{errors.source}</span>}
           </div>
 
-          {/* Category Select */}
           <div className="flex flex-col gap-1">
             <label htmlFor="category" className="font-medium text-gray-700">Category</label>
-            <select id="category" className="border p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <select id="category" className="border p-2 rounded-md" onChange={handleChange} value={formData.category}>
               <option>Salary</option>
               <option>Freelancing</option>
               <option>Investments</option>
@@ -35,25 +85,24 @@ const Insertincome = () => {
             </select>
           </div>
 
-          {/* Amount Input */}
           <div className="flex flex-col gap-1">
             <label htmlFor="amount" className="font-medium text-gray-700">Amount</label>
-            <input type="number" id="amount" className="border p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Enter amount" />
+            <input type="number" id="amount" className="border p-2 rounded-md" onChange={handleChange} value={formData.amount} />
+            {errors.amount && <span className="text-red-500 text-sm">{errors.amount}</span>}
           </div>
 
-          {/* Note Textarea */}
           <div className="flex flex-col gap-1">
             <label htmlFor="note" className="font-medium text-gray-700">Note</label>
-            <textarea id="note" rows="3" className="border p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Add a note (optional)"></textarea>
+            <textarea id="note" rows="3" className="border p-2 rounded-md" onChange={handleChange} value={formData.note}></textarea>
+            {errors.note && <span className="text-red-500 text-sm">{errors.note}</span>}
           </div>
 
-          {/* Date Input */}
           <div className="flex flex-col gap-1">
             <label htmlFor="date" className="font-medium text-gray-700">Date</label>
-            <input type="date" id="date" className="border p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
+            <input type="date" id="date" className="border p-2 rounded-md" onChange={handleChange} value={formData.date} />
+            {errors.date && <span className="text-red-500 text-sm">{errors.date}</span>}
           </div>
 
-          {/* Buttons */}
           <div className="flex justify-between">
             <button type="button" onClick={() => navigate(-1)} className="bg-gray-500 text-white p-2 rounded-md hover:bg-gray-600 transition">
               Back
@@ -64,9 +113,8 @@ const Insertincome = () => {
           </div>
         </form>
 
-        {/* Image */}
         <div className="hidden lg:block w-1/2 pl-8">
-          <img src="assets\images\insert.png" alt="Income Illustration" className="w-full h-auto rounded-lg shadow-md" />
+          <img src="assets/images/insert.png" alt="Income Illustration" className="w-full h-auto rounded-lg shadow-md" />
         </div>
       </div>
     </div>
