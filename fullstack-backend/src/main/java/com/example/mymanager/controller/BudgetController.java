@@ -1,13 +1,13 @@
-package com.example.budget.controller;
+package com.example.mymanager.controller;
 
-import com.example.budget.dto.BudgetDTO;
-import com.example.budget.dto.BudgetRequest;
-import com.example.budget.model.Budget;
-import com.example.budget.model.Expense;
-import com.example.budget.model.User;
-import com.example.budget.repository.BudgetRepository;
-import com.example.budget.repository.ExpenseRepository;
-import com.example.budget.repository.UserRepository;
+import com.example.mymanager.dto.BudgetDTO;
+import com.example.mymanager.dto.BudgetRequest;
+import com.example.mymanager.model.Budget;
+import com.example.mymanager.model.Expense;
+import com.example.mymanager.model.User;
+import com.example.mymanager.repository.BudgetRepository;
+import com.example.mymanager.repository.ExpenseRepository;
+import com.example.mymanager.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -112,11 +112,18 @@ public class BudgetController {
     /**
      * Get all budgets
      */
-    @GetMapping("/all")
-    public ResponseEntity<List<BudgetDTO>> getAllBudgets() {
-        List<Budget> budgets = budgetRepository.findAll();
-        List<BudgetDTO> budgetDTOs = budgets.stream().map(this::convertToDTO).collect(Collectors.toList());
-        return ResponseEntity.ok(budgetDTOs); // Return DTOs
+    @GetMapping("/all/{id}")
+    public ResponseEntity<List<BudgetDTO>> getAllBudgetsByUserId(@PathVariable Long id) {
+        // Fetch budgets filtered by user_id
+        List<Budget> budgets = budgetRepository.findByUserId(id);
+
+        // Convert the list of Budget entities to BudgetDTOs
+        List<BudgetDTO> budgetDTOs = budgets.stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
+
+        // Return the filtered DTOs
+        return ResponseEntity.ok(budgetDTOs);
     }
 
     /**
@@ -155,11 +162,18 @@ public class BudgetController {
     /**
      * Get budgets where spending exceeds 80% of the limit
      */
-    @GetMapping("/over-80-percent")
-    public ResponseEntity<List<BudgetDTO>> getBudgetsOver80Percent() {
-        List<Budget> budgets = budgetRepository.findBudgetsWhereSpentOver80Percent();
-        List<BudgetDTO> budgetDTOs = budgets.stream().map(this::convertToDTO).collect(Collectors.toList());
-        return ResponseEntity.ok(budgetDTOs); // Return DTOs
+    @GetMapping("/over-80-percent/{userId}")
+    public ResponseEntity<List<BudgetDTO>> getBudgetsOver80PercentByUserId(@PathVariable Long userId) {
+        // Fetch budgets filtered by user_id and spent > 80%
+        List<Budget> budgets = budgetRepository.findBudgetsWhereSpentOver80PercentByUserId(userId);
+
+        // Convert the list of Budget entities to BudgetDTOs
+        List<BudgetDTO> budgetDTOs = budgets.stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
+
+        // Return the filtered DTOs
+        return ResponseEntity.ok(budgetDTOs);
     }
 
     /**
