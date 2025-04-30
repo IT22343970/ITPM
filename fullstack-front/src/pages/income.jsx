@@ -31,7 +31,8 @@ const Income = () => {
         console.error("Error fetching the income data:", error);
       });
   }, []);
-// handling  delete
+
+  // handling delete
   const handleDelete = async (id) => {
     const confirmDelete = window.confirm("Are you sure you want to delete this income record?");
     if (!confirmDelete) return;
@@ -58,6 +59,7 @@ const Income = () => {
     saveAs(blob, 'income_report.csv');
   };
 
+  // Filter the data based on the filters
   const filteredData = incomeData.filter(income => 
     (filters.source ? income.source.includes(filters.source) : true) &&
     (filters.category ? income.category.includes(filters.category) : true) &&
@@ -100,6 +102,36 @@ const Income = () => {
         {/* Page Content */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <h2 className="text-2xl font-bold text-gray-900 mb-4">Income Records</h2>
+
+          {/* Filters */}
+          <div className="mb-4">
+            <input 
+              type="text" 
+              placeholder="Source" 
+              value={filters.source} 
+              onChange={(e) => setFilters({ ...filters, source: e.target.value })} 
+              className="px-4 py-2 border rounded-md mr-2"
+            />
+            <input 
+              type="text" 
+              placeholder="Category" 
+              value={filters.category} 
+              onChange={(e) => setFilters({ ...filters, category: e.target.value })} 
+              className="px-4 py-2 border rounded-md mr-2"
+            />
+            <input 
+              type="date" 
+              value={filters.startDate} 
+              onChange={(e) => setFilters({ ...filters, startDate: e.target.value })} 
+              className="px-4 py-2 border rounded-md mr-2"
+            />
+            <input 
+              type="date" 
+              value={filters.endDate} 
+              onChange={(e) => setFilters({ ...filters, endDate: e.target.value })} 
+              className="px-4 py-2 border rounded-md"
+            />
+          </div>
 
           <button onClick={() => navigate("/Insertincome")} className="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 mr-2">Insert Income</button>
           <button onClick={handleDownload} className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700">Download Report</button>
