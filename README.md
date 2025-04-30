@@ -1,2 +1,3 @@
 # ITPM
-ITPM Y3S2
+his project is a user-friendly financial management web application designed to help individuals effectively track and control their personal finances. It includes four key modules: income management, expense management, budget management, and a smart analytics dashboard. Users can perform CRUD operations on income and expense records with proper validations, set monthly or yearly budgets, and monitor their financial discipline. The analytics dashboard provides visual reports and insights using various filters, allowing users to understand their financial habits and make better decisions. Overall, the system aims to enhance financial awareness and promote better money management.
+
