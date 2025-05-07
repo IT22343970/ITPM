@@ -23,8 +23,10 @@
     "postcss-loader": "^8.1.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "react-is": "^19.1.0",
     "react-router-dom": "^7.4.0",
     "react-scripts": "^5.0.1",
+    "recharts": "^2.15.3",
     "web-vitals": "^4.2.4"
   },
   "devDependencies": {

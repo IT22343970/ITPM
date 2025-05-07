@@ -6,17 +6,16 @@ const InsertIncome = () => {
   const [formData, setFormData] = useState({
     userId: "",
     source: "",
-    category: "Salary",
+    category: "Employment Income",
     amount: "",
     note: "",
     date: ""
   });
-  const [errors, setErrors] = useState({}); //hold error for validation feedback
+  const [errors, setErrors] = useState({});
 
   const validate = () => {
     let newErrors = {};
 
-    // Validation rules
     if (!/^[1-9]\d{0,9}$/.test(formData.userId)) {
       newErrors.userId = "User ID must be a positive integer not exceeding 10 characters";
     }
@@ -48,7 +47,7 @@ const InsertIncome = () => {
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.id]: e.target.value });
   };
-//handle form submition
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (validate()) {
@@ -65,7 +64,6 @@ const InsertIncome = () => {
           throw new Error("Failed to add income");
         }
 
-        // Redirect after successful submission
         navigate("/income");
       } catch (error) {
         console.error("Error adding income:", error);
@@ -74,118 +72,99 @@ const InsertIncome = () => {
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-100 p-4">
-      <div className="flex justify-center items-center w-full max-w-4xl bg-white p-6 border rounded-lg shadow-lg">
-        {/* Container holding both form and image */}
-        <div className="flex w-full">
-          {/* Form Section */}
-          <form className="space-y-4 w-full lg:w-1/2" onSubmit={handleSubmit}>
-            <h2 className="text-xl font-semibold text-center text-gray-800">Insert Income</h2>
+    <div className="flex justify-center items-center min-h-screen bg-gradient-to-br from-gray-100 to-green-50 p-6">
+      <div className="flex flex-col lg:flex-row items-stretch w-full max-w-5xl bg-white rounded-xl shadow-2xl overflow-hidden">
+        {/* Form Section */}
+        <form
+          onSubmit={handleSubmit}
+          className="w-full lg:w-1/2 p-8 space-y-5 bg-white animate-fade-in"
+        >
+          <h2 className="text-2xl font-bold text-center text-green-700">Insert Income</h2>
 
-            <div className="flex flex-col gap-1">
-              <label htmlFor="userId" className="font-medium text-gray-700">User ID</label>
+          {[
+            { id: "userId", label: "User ID", type: "text" },
+            { id: "source", label: "Source", type: "text" },
+            { id: "amount", label: "Amount", type: "number" },
+            { id: "date", label: "Date", type: "date" }
+          ].map(({ id, label, type }) => (
+            <div key={id}>
+              <label htmlFor={id} className="block text-sm font-semibold text-gray-600">
+                {label}
+              </label>
               <input
-                type="text"
-                id="userId"
-                className="border p-2 rounded-md"
+                type={type}
+                id={id}
+                value={formData[id]}
                 onChange={handleChange}
-                value={formData.userId}
+                className={`mt-1 w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-400 transition duration-300 ${
+                  errors[id] ? "border-red-500" : "border-gray-300"
+                }`}
               />
-              {errors.userId && <span className="text-red-500 text-sm">{errors.userId}</span>}
+              {errors[id] && <p className="text-red-500 text-sm mt-1">{errors[id]}</p>}
             </div>
+          ))}
 
-            <div className="flex flex-col gap-1">
-              <label htmlFor="source" className="font-medium text-gray-700">Source</label>
-              <input
-                type="text"
-                id="source"
-                className="border p-2 rounded-md"
-                onChange={handleChange}
-                value={formData.source} //bind value to formdata state
-              />
-              {errors.source && <span className="text-red-500 text-sm">{errors.source}</span>}
-            </div>
+          {/* Category Dropdown */}
+          <div>
+            <label htmlFor="category" className="block text-sm font-semibold text-gray-600">
+              Category
+            </label>
+            <select
+              id="category"
+              value={formData.category}
+              onChange={handleChange}
+              className="mt-1 w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-400 transition"
+            >
+              <option>Employment Income</option>
+              <option>Passive Income</option>
+              <option>Online Income</option>
+              <option>Business Income</option>
+              <option>Other</option>
+            </select>
+          </div>
 
-            <div className="flex flex-col gap-1">
-              <label htmlFor="category" className="font-medium text-gray-700">Category</label>
-              <select
-                id="category"
-                className="border p-2 rounded-md"
-                onChange={handleChange}
-                value={formData.category}
-              >
-                <option>Employment Income</option>
-                <option>Passive Income</option>
-                <option>Online Income</option>
-                <option>Business Income</option>
-                <option>Other</option>
-              </select>
-            </div>
+          {/* Note */}
+          <div>
+            <label htmlFor="note" className="block text-sm font-semibold text-gray-600">
+              Note
+            </label>
+            <textarea
+              id="note"
+              rows="3"
+              value={formData.note}
+              onChange={handleChange}
+              className={`mt-1 w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-400 transition duration-300 ${
+                errors.note ? "border-red-500" : "border-gray-300"
+              }`}
+            ></textarea>
+            {errors.note && <p className="text-red-500 text-sm mt-1">{errors.note}</p>}
+          </div>
 
-            <div className="flex flex-col gap-1">
-              <label htmlFor="amount" className="font-medium text-gray-700">Amount</label>
-              <input
-                type="number"
-                id="amount"
-                className="border p-2 rounded-md"
-                onChange={handleChange}
-                value={formData.amount}
-              />
-              {errors.amount && <span className="text-red-500 text-sm">{errors.amount}</span>}
-            </div>
-
-            <div className="flex flex-col gap-1">
-              <label htmlFor="note" className="font-medium text-gray-700">Note</label>
-              <textarea
-                id="note"
-                rows="3"
-                className="border p-2 rounded-md"
-                onChange={handleChange}
-                value={formData.note}
-              ></textarea>
-              {errors.note && <span className="text-red-500 text-sm">{errors.note}</span>}
-            </div>
-
-            <div className="flex flex-col gap-1">
-              <label htmlFor="date" className="font-medium text-gray-700">Date</label>
-              <input
-                type="date"
-                id="date"
-                className="border p-2 rounded-md"
-                onChange={handleChange}
-                value={formData.date}
-              />
-              {errors.date && <span className="text-red-500 text-sm">{errors.date}</span>}
-            </div>
-
-            <div className="flex justify-between">
-              <button
-                    type="button"
-                        onClick={() => navigate(-1)}
-                       className="bg-green-500 text-white px-4 py-2 w-32 text-center rounded-md hover:bg-gray-600 transition"
-              >
-                      Back
-              </button>
+          {/* Buttons */}
+          <div className="flex justify-between gap-4 pt-4">
             <button
-               type="submit"
-               className="bg-green-500 text-white px-4 py-2 w-32 text-center rounded-md hover:bg-blue-700 transition"
-          >
-               Submit
+              type="button"
+              onClick={() => navigate(-1)}
+              className="w-full py-2 bg-gray-400 text-white rounded-md hover:bg-gray-600 transition"
+            >
+              Back
             </button>
-            
+            <button
+              type="submit"
+              className="w-full py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition"
+            >
+              Submit
+            </button>
+          </div>
+        </form>
 
-            </div>
-          </form>
-
-          {/* Image Section */}
-          <div className="hidden lg:flex w-1/2 justify-center items-center">
-  <img
-    src="assets/images/insert.png"
-    alt="Income Illustration"
-    className="w-full max-w-lg h-auto rounded-lg shadow-md self-center"
-  />
-</div>
-
+        {/* Image Section */}
+        <div className="hidden lg:flex w-1/2 items-center justify-center bg-green-100 p-6">
+          <img
+            src="/assets/images/insert.png"
+            alt="Insert Income Illustration"
+            className="rounded-lg shadow-lg w-full h-auto max-w-md"
+          />
         </div>
       </div>
     </div>
